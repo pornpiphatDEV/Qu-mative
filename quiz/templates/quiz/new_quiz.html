@@ -1,0 +1,25 @@
+{% extends 'quiz/new_update_quiz_common.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+
+    <form action='{% url "new-quiz" %}' method='post' class="quiz-form">
+        {% csrf_token %}
+
+        {% include 'quiz/settings_modal.html' %}
+
+        <div class="heading">
+            
+            <input type='text' class="heading__text" name='quiz' required autofocus placeholder="ชื่อวิชา">
+            <a href="{{quiz.get_absolute_url}}" class="card-link">มุมมอง</a>    
+        </div>
+
+  
+ 
+        <button type='submit' id='submit' hidden></button>
+
+    </form>
+</div>
+
+{% endblock content %}

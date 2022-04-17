@@ -1,0 +1,213 @@
+{% load static %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="{% static 'taker/result.css' %}">
+<link rel="stylesheet" href="{% static 'taker/table-result.css' %}">
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+<div class="container">
+    <div class="heading">
+        <h1 class="heading__text">{{quiz.name}}</h1>
+    </div>
+
+
+
+
+    <!--ส่วนของกราฟ-->
+
+    <!--ส่วนท้ายส่วนของกราฟ-->
+
+    <div class="quiz">
+
+        <!--ส่วนของคะแนน-->
+        <div class="quiz__heading">
+            <h2 class="quiz__heading-text">
+                Score: {{score}}
+            </h2>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-6 mb-4">
+                <form class="quiz-form">
+                    {% for question in questions %}
+                    <div class="question">
+
+                        <!-- ส่วนของฟอร์มข้อคำถาม -->
+                        <div class="questionHeader">
+                            <p class="quiz-form__question">{{question.question}}</p>
+                            <p class="quiz-form__question"> พุทธิพิสัย: {{question.typequestion}}</p>
+                            <div class="point">
+                                <p>{{question.point}}</p>
+                                {% if question.point == 1 %}
+                                <span>point</span>
+                                {% else %}
+                                <span>points</span>
+                                {% endif %}
+
+                            </div>
+                        </div>
+
+                        {% if question.type == 'mcq' %}
+
+                        {% include 'taker/mcq.html' %}
+
+                        {% elif question.type == 'checkbox' %}
+
+                        {% include 'taker/checkbox.html' %}
+
+                        {% elif question.type == 'short' %}
+
+                        {% include 'taker/short.html' %}
+
+                        {% endif %}
+
+                    </div>
+                    {% endfor %}
+
+                </form>
+            </div>
+
+            <!-- path('Exportstudent/take-quiz/<int:pk>/<int:taker_id>/result/',
+                taker_views.result, name='result'), -->
+            <div align="right">
+                <a href="http://127.0.0.1:8000/Exportstudent/take-quiz/{{pk}}/{{taker_id}}/result/"
+                    class='btn btn-success'>Export Excel</a>
+            </div>
+
+            
+            <div style="margin:auto;width:80%;">
+                <div id="chart_div" style="margin:auto;width:600px;height:400px;margin-top: 50px; "></div>
+            </div>
+
+
+
+            <table>
+                <caption>
+                    <h3 style="text-align: center;">ผลสรุปการทำแบบทดสอบในแต่ละด้านตามพุทธิพิสัย</h3>
+                </caption>
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            <p>คะแนนด้านพุทธิพิสัยที่ถูกต้อง</p>
+                        </th>
+                        <th scope="col">
+                            <p>คะแนนด้านพุทธิพิสัยที่ผิดพลาด</p>
+                        </th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <th scope="row">
+                            <p>พุทธิพิสัยด้านความจำ : {{assessteaching.Remember}} ข้อ </p>
+                        </th>
+                        <td>
+                            <p>พุทธิพิสัยด้านความจำ : {{mistakesassessteaching.Remember}} ข้อ </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <p>พุทธิพิสัยด้านความเข้าใจ : {{assessteaching.Understand}} ข้อ</p>
+                        </th>
+                        <td>
+                            <p>พุทธิพิสัยด้านความเข้าใจ : {{mistakesassessteaching.Understand}} ข้อ</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <p>พุทธิพิสัยด้านประยุกต์ใช้ : {{assessteaching.Apply}} ข้อ</p>
+                        </th>
+                        <td>
+                            <p>พุทธิพิสัยด้านประยุกต์ใช้ : {{mistakesassessteaching.Apply}} ข้อ</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <p>พุทธิพิสัยด้านวิเคราะห์ : {{assessteaching.Analyze}} ข้อ</p>
+                        </th>
+                        <td>
+                            <p>พุทธิพิสัยด้านวิเคราะห์ : {{mistakesassessteaching.Analyze}} ข้อ</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <p>พุทธิพิสัยด้านประเมินค่า : {{assessteaching.Evaluate}} ข้อ</p>
+                        </th>
+                        <td>
+                            <p>พุทธิพิสัยด้านประเมินค่า : {{mistakesassessteaching.Evaluate}} ข้อ</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <p>พุทธิพิสัยด้านสร้างสรรค์ : {{assessteaching.Creative}} ข้อ</p>
+                        </th>
+                        <td>
+                            <p>พุทธิพิสัยด้านสร้างสรรค์ : {{mistakesassessteaching.Creative}} ข้อ</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <p>รวมทั้งหมด : {{assessteaching.together}} ข้อ</p>
+                        </th>
+                        <td>
+                            <p>รวมทั้งหมด : {{mistakesassessteaching.together}} ข้อ</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+        </div>
+
+        <div style="margin:auto;width:80%;">
+            <div id="chart_div" style="margin:auto;width:600px;height:400px;"></div>
+        </div>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    google.load("visualization", "1", { packages: ["corechart"] });
+    google.setOnLoadCallback(drawChart);
+    function drawChart() {
+        // สร้างตัวแปร array เก็บค่า ข้อมูล
+
+        var dataArray1 = [
+            ['พุทธิพิสัยด้านต่าง', 'คะแนนด้านพุทธิพิสัยที่ถูกต้อง', 'คะแนนด้านพุทธิพิสัยที่ผิดพลาด'],
+            ['ความจำ', parseInt('{{assessteaching.Remember}}'), parseInt('{{mistakesassessteaching.Remember}}')],
+            ['ความเข้าใจ', parseInt('{{assessteaching.Understand}}'), parseInt('{{mistakesassessteaching.Understand}}')],
+            ['ประยุกต์ใช้', parseInt('{{assessteaching.Apply}}'), parseInt('{{mistakesassessteaching.Apply}}')],
+            ['ประเมินค่า', parseInt('{{assessteaching.Analyze}}'), parseInt('{{mistakesassessteaching.Analyze}}')],
+            ['สร้างสรรค์', parseInt('{{assessteaching.Evaluate}}'), parseInt('{{mistakesassessteaching.Evaluate}}')],
+            ['ประเมินค่า', parseInt('{{assessteaching.Creative}}'), parseInt('{{mistakesassessteaching.Creative}}')],
+        ];
+
+        // แปลงข้อมูลจาก array สำหรับใช้ในการสร้าง กราฟ
+        var data = google.visualization.arrayToDataTable(dataArray1);
+
+        // ตั้งค่าต่างๆ ของกราฟ เพิ่มเติม https://developers.google.com/chart/interactive/docs/gallery/columnchart
+        var options = {
+            title: "ผลสรุปการทำแบบทดสอบในแต่ละด้านตามพุทธิพิสัย",
+            hAxis: { title: 'พุทธิพิสัยด้านต่าง', titleTextStyle: { color: 'red' } },
+            vAxis: { title: 'คะแนน', titleTextStyle: { color: 'blue' } },
+            width: 600,
+            height: 400,
+            bar: { groupWidth: "70%" },
+            legend: { position: 'right', maxLines: 3 },
+            tooltip: { trigger: 'select' }
+        };
+
+        // สร้างกราฟแนวตั้ง แสดงใน div id = chart_div
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+        chart.draw(data, options); // สร้างกราฟ
+
+    }
+</script>
